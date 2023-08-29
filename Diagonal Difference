@@ -1,0 +1,88 @@
+Given a square matrix, calculate the absolute difference between the sums of its diagonals.
+For example, the square matrix  is shown below:
+1 2 3
+4 5 6
+9 8 9  
+The left-to-right diagonal = . The right to left diagonal = . Their absolute difference is .
+Function description
+Complete the  function in the editor below.
+diagonalDifference takes the following parameter:
+int arr[n][m]: an array of integers
+Return
+int: the absolute diagonal difference
+Input Format
+The first line contains a single integer, , the number of rows and columns in the square matrix . 
+Each of the next  lines describes a row, , and consists of  space-separated integers .
+Constraints
+
+Output Format
+Return the absolute difference between the sums of the matrix's two diagonals as a single integer.
+Sample Input
+3
+11 2 4
+4 5 6
+10 8 -12
+Sample Output
+15
+Explanation
+The primary diagonal is:
+11
+   5
+     -12
+Sum across the primary diagonal: 11 + 5 - 12 = 4
+The secondary diagonal is:
+     4
+   5
+10
+Sum across the secondary diagonal: 4 + 5 + 10 = 19 
+Difference: |4 - 19| = 15
+Note: |x| is the absolute value of x-module(solution).
+-export([main/0]).
+-import(os, [getenv/1]).
+
+%
+% Complete the 'diagonalDifference' function below.
+%
+% The function is expected to return an INTEGER.
+
+% The function accepts 2D_INTEGER_ARRAY arr as parameter.
+%
+diagonalDifference(Arr) ->
+    Size = length(Arr),
+    LeftDiagonalSum = lists:foldl(fun(I, Acc) -> lists:nth(I, lists:nth(I, Arr)) + Acc end, 0, lists:seq(1, Size)),
+    RightDiagonalSum = lists:foldl(fun(I, Acc) -> lists:nth(I, lists:nth(Size - I + 1, Arr)) + Acc end, 0, lists:seq(1, Size)),
+    abs(LeftDiagonalSum - RightDiagonalSum).
+
+read_multiple_lines_as_list_of_strings(N) ->
+    read_multiple_lines_as_list_of_strings(N, []).
+
+read_multiple_lines_as_list_of_strings(0, Acc) ->
+    lists:reverse(Acc);
+read_multiple_lines_as_list_of_strings(N, Acc) when N > 0 ->
+    read_multiple_lines_as_list_of_strings(N - 1, [re:replace(io:get_line(""), "(\\r\\n$)|(\\n$)", "", [global, {return, list}]) | Acc]).
+
+main() ->
+    {ok, Fptr} = file:open(getenv("OUTPUT_PATH"), [write]),
+
+    {N, _} = string:to_integer(re:replace(io:get_line(""), "(^\\s+)|(\\s+$)", "", [global, {return, list}])),
+
+    ArrTemp = read_multiple_lines_as_list_of_strings(N),
+
+    Arr = lists:map(fun(X) -> lists:map(fun(Y) -> {I, _} = string:to_integer(Y), I end, re:split(re:replace(X, "\\s+$", "", [global, {return, list}]), "\\s+", [{return, list}])) end, ArrTemp),
+
+    Result = diagonalDifference(Arr),
+
+    io:fwrite(Fptr, "~w~n", [Result]),
+
+    file:close(Fptr),
+
+    ok.
+
+
+////////// aswer option one //////////
+
+
+
+
+
+
